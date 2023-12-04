@@ -19,11 +19,9 @@ class Day4 {
             .toInt()
         val queue: Queue<String> = LinkedList(lines)
         val freq: HashMap<Int, Int> = HashMap()
-        val visited: HashMap<Int, Int> = HashMap()
 
         while (queue.size > 0) {
             val line: String = queue.poll()
-            if(visited.containsKey())
             val elements: List<String> = line.split(":")[1]
                 .split("|")
                 .map { it.trim() }
