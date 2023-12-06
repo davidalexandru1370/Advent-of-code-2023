@@ -23,8 +23,7 @@ class Day5 {
         val lines: List<String> = File("src/main/kotlin/day5/1.txt").readLines()
         val linesTogether: String = lines.joinToString(separator = "\n")
         seeds = "\\d+".toRegex().findAll(lines[0]).map { it.value.toLong() }.toList()
-
-        seedToSoil = convertToRangeMap(linesTogether, "seed", "soil").sortedBy { it.source }
+        seedToSoil = convertToRangeMap(linesTogether, "seed", "soil")
         soilToFertilizer = convertToRangeMap(linesTogether, "soil", "fertilizer")
         fertilizerToWater = convertToRangeMap(linesTogether, "fertilizer", "water")
         waterToLight = convertToRangeMap(linesTogether, "water", "light")
@@ -37,23 +36,20 @@ class Day5 {
     }
 
     private fun solve2() {
-        var result: AtomicLong = AtomicLong(Long.MAX_VALUE)
-
+        val result: AtomicLong = AtomicLong(Long.MAX_VALUE)
         seeds
             .chunked(2)
             .map { (start, range) -> start..<(start + range) }
             .forEach { range ->
                 range.asSequence().asStream().parallel().forEach { seed ->
-                    result.getAndAccumulate(solve(seed)) { a, b -> min(a, b) }
+                    result.getAndAccumulate(solve(seed), ::min)
                 }
-
             }
 
         println("Day 5, Part 2: ${result.get()}")
     }
 
     private fun solve1() {
-
         var result: Long = Long.MAX_VALUE
         seeds.forEach { seed ->
             result = min(solve(seed), result)
@@ -76,9 +72,10 @@ class Day5 {
     }
 
     private fun lookup(seed: Long, rangeMap: List<RangeMap>): Long {
+        var seeds: List<Long> = listOf()
         for (rm in rangeMap) {
             val (destination, source, rangeLength) = rm
-            if (seed >= source && seed < source + rangeLength) {
+            if ((seed >= source) && seed < (source + rangeLength)) {
                 return seed - source + destination
             }
         }
