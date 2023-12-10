@@ -18,6 +18,25 @@ class Day10 {
     }
 
 
+    private fun solve2(input: List<String>): Int{
+        var tiles: Int = 0
+        val grid: List<List<Char>> = ArrayList()
+        var start: Pair<Int, Int> = Pair(0, 0)
+
+        input.forEachIndexed { row, line ->
+            var column: ArrayList<Char> = ArrayList()
+            line.forEachIndexed { col, c ->
+                column.add(c)
+                if (c == 'S') {
+                    start = Pair(row, col)
+                }
+            }
+            grid.addLast(column)
+        }
+
+        return tiles
+    }
+
     private fun solve1(input: List<String>): Int {
         val grid: List<List<Char>> = ArrayList()
         var start: Pair<Int, Int> = Pair(0, 0)
@@ -106,10 +125,12 @@ class Day10 {
             queue.add(Pipe(Direction.WEST, right.first, right.second))
         }
         maxSteps = 1
+        queue.poll()
         while (queue.isNotEmpty()) {
             val front: Pipe = queue.poll()
-            if(front.row == start.first && front.column == start.second){
+            if (front.row == start.first && front.column == start.second) {
                 println(maxSteps / 2 + maxSteps % 2)
+                break
             }
             when (grid[front.row][front.column]) {
                 'L' -> {
@@ -119,11 +140,7 @@ class Day10 {
 
                     } else {
                         val next: Pipe = Pipe(Direction.SOUTH, front.row - 1, front.column)
-                        val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     }
                 }
 
@@ -131,18 +148,12 @@ class Day10 {
                     if (front.previousDirection == Direction.NORTH) {
                         val next: Pipe = Pipe(Direction.EAST, front.row, front.column - 1)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
 
                     } else {
                         val next: Pipe = Pipe(Direction.SOUTH, front.row - 1, front.column)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     }
                 }
 
@@ -150,17 +161,11 @@ class Day10 {
                     if (front.previousDirection == Direction.SOUTH) {
                         val next: Pipe = Pipe(Direction.EAST, front.row, front.column - 1)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     } else {
                         val next: Pipe = Pipe(Direction.NORTH, front.row + 1, front.column)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     }
                 }
 
@@ -168,17 +173,11 @@ class Day10 {
                     if (front.previousDirection == Direction.NORTH) {
                         val next: Pipe = Pipe(Direction.NORTH, front.row + 1, front.column)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     } else {
                         val next: Pipe = Pipe(Direction.SOUTH, front.row - 1, front.column)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     }
                 }
 
@@ -186,50 +185,31 @@ class Day10 {
                     if (front.previousDirection == Direction.WEST) {
                         val next: Pipe = Pipe(Direction.WEST, front.row, front.column + 1)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     } else {
                         val next: Pipe = Pipe(Direction.EAST, front.row, front.column - 1)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     }
                 }
 
                 'F' -> {
                     if (front.previousDirection == Direction.EAST) {
-                        val next: Pipe = Pipe(Direction.SOUTH, front.row - 1, front.column)
+                        val next: Pipe = Pipe(Direction.NORTH, front.row + 1, front.column)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     } else {
                         val next: Pipe = Pipe(Direction.WEST, front.row, front.column + 1)
                         val distance: Int = visited[front.row][front.column] + 1
-                        if (visited[next.row][next.column] == 0) {
-                            queue.add(next)
-                            visited[next.row][next.column] = distance
-                        }
+                        queue.add(next)
                     }
                 }
             }
+            maxSteps += 1
         }
 
-        visited.forEach { row ->
-            row.forEach { col ->
-                if (col > maxSteps) {
-                    maxSteps = col
-                }
-            }
-        }
 
-        println(maxSteps)
-        return maxSteps
+        return maxSteps / 2 + maxSteps % 2
     }
 
     private fun isInBounds(row: Int, col: Int, n: Int, m: Int): Boolean {
