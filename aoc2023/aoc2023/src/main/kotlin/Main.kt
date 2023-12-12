@@ -1,6 +1,7 @@
 import day1.Day1
 import day10.Day10
 import day11.Day11
+import day12.Day12
 import day2.Day2
 import day3.Day3
 import day4.Day4
@@ -21,6 +22,7 @@ fun main(args: Array<String>) {
     //Day8()
     //Day9()
     //Day10()
-    Day11()
+    //Day11()
+    Day12()
 }
 
