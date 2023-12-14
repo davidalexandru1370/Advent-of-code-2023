@@ -12,7 +12,7 @@ class Day13 {
         var matrices = templates.split("\n\n")
         var sum: Long = 0L
 
-        for(matrix in matrices){
+        for (matrix in matrices) {
             val lines: List<String> = matrix.split("\n")
             val linesIdentical: HashMap<String, List<Int>> = HashMap()
             val columnsIdentical: HashMap<String, List<Int>> = HashMap()
@@ -44,13 +44,14 @@ class Day13 {
                 columnsIdentical[column]!!.addLast(index)
             }
 
-            val indicesLines: List<Int> = linesIdentical.values.filter { it.size == 2 }.flatten().sorted()
-            val indicesColumn: List<Int> = columnsIdentical.values.filter { it.size == 2 }.flatten().sorted()
+            val indicesLines: List<Int> = linesIdentical.values.filter { it.size >= 2 }.flatten().sorted()
+            val indicesColumn: List<Int> = columnsIdentical.values.filter { it.size >= 2 }.flatten().sorted()
 
             if (indicesLines.size > indicesColumn.size) {
                 val mirrorIndex = indicesLines[indicesLines.size / 2]
                 sum += (mirrorIndex * 100L)
-            } else {
+            }
+            else  {
                 val mirrorIndex = indicesColumn[indicesColumn.size / 2]
                 sum += (mirrorIndex * 1L)
             }
