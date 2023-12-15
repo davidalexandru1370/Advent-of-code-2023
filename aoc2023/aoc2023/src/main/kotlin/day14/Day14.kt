@@ -31,12 +31,10 @@ class Day14 {
                 val nextGrid = fallRocks(grid)
                 grid = rotateClockwise(nextGrid)
             }
-            //println(iteration)
 
             if (grid.contentDeepToString() in visited) {
                 break
             } else {
-//                visited[grid] = iteration
                 visited.add(grid.contentDeepToString())
                 order.add(Pair(grid.contentDeepToString(), grid.map { it.copyOf() }.toTypedArray()))
             }
