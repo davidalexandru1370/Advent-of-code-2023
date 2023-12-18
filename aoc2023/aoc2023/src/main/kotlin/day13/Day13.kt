@@ -1,63 +1,97 @@
 package day13
 
+import helpers.IDay
+
 import java.io.File
 
-class Day13 {
+class Day13 : IDay {
     init {
-        solve1()
+        //solve1()
+        solve2()
     }
 
-    private fun solve1() {
-        val templates = File("src/main/kotlin/day13/1.txt").readLines().joinToString("\n")
-        var matrices = templates.split("\n\n")
-        var sum: Long = 0L
+    private fun findMirror(lines: List<String>): Int {
+        for(split in 1..<lines.size) {
+            var first = lines.subList(0, split).reversed()
+            var second = lines.subList(split, lines.size)
 
-        for (matrix in matrices) {
-            val lines: List<String> = matrix.split("\n")
-            val linesIdentical: HashMap<String, List<Int>> = HashMap()
-            val columnsIdentical: HashMap<String, List<Int>> = HashMap()
-
-            //2,3,4,5,6,7,8,9
-            var left: Int = 0
-            var right: Int = 0
-            //2,3,4,5,6,7
-            val columns: ArrayList<String> = ArrayList<String>().apply {
-                repeat(lines[0].length) {
-                    add("")
-                }
+            if(second.size < first.size){
+                first = first.subList(0, second.size)
+            }
+            if(first.size < second.size){
+                second = second.subList(0, first.size)
             }
 
-            lines.forEachIndexed { index, line ->
-                if (line !in linesIdentical) {
-                    linesIdentical[line] = ArrayList()
-                }
-                line.forEachIndexed { indexColumn, c ->
-                    columns[indexColumn] = columns[indexColumn] + c
-                }
-                linesIdentical[line]!!.addLast(index)
-            }
-
-            columns.forEachIndexed { index, column ->
-                if (column !in columnsIdentical) {
-                    columnsIdentical[column] = ArrayList()
-                }
-                columnsIdentical[column]!!.addLast(index)
-            }
-
-            val indicesLines: List<Int> = linesIdentical.values.filter { it.size >= 2 }.flatten().sorted()
-            val indicesColumn: List<Int> = columnsIdentical.values.filter { it.size >= 2 }.flatten().sorted()
-
-            if (indicesLines.size > indicesColumn.size) {
-                val mirrorIndex = indicesLines[indicesLines.size / 2]
-                sum += (mirrorIndex * 100L)
-            }
-            else  {
-                val mirrorIndex = indicesColumn[indicesColumn.size / 2]
-                sum += (mirrorIndex * 1L)
+            if(first == second) {
+                return split
             }
         }
 
+        return 0
+    }
+
+    override fun solve1() {
+        val templates = File("src/main/kotlin/day13/1.txt").readLines().joinToString("\n")
+        val matrices: List<String> = templates.split("\n\n")
+        var sum: Long = 0L
+
+
+        matrices.forEach { matrix ->
+            val lines: List<String> = matrix.split("\n")
+            val columns: List<String> =
+                List<String>(lines[0].length) { i -> lines.joinToString(separator = "") { it.getOrNull(i).toString() } }
+
+            val linesMirror: Int = findMirror(lines)
+            val columnsMirror: Int = findMirror(columns)
+
+            sum += (linesMirror * 100 + columnsMirror)
+        }
 
         println(sum)
+    }
+
+
+    private fun findMirrorSmudge(lines: List<String>): Int {
+        for(split in 1..<lines.size) {
+            var first = lines.subList(0, split).reversed()
+            var second = lines.subList(split, lines.size)
+
+            if(second.size < first.size){
+                first = first.subList(0, second.size)
+            }
+            if(first.size < second.size){
+                second = second.subList(0, first.size)
+            }
+
+            val levenshtein = first
+                .zip(second)
+                .sumOf { (a, b) -> a.zip(b).count { (c, d) -> c != d } }
+
+            if(levenshtein == 1){
+                return split
+            }
+        }
+
+        return 0
+    }
+    override fun solve2() {
+        val templates = File("src/main/kotlin/day13/1.txt").readLines().joinToString("\n")
+        val matrices: List<String> = templates.split("\n\n")
+        var sum: Long = 0L
+
+
+        matrices.forEach { matrix ->
+            val lines: List<String> = matrix.split("\n")
+            val columns: List<String> =
+                List<String>(lines[0].length) { i -> lines.joinToString(separator = "") { it.getOrNull(i).toString() } }
+
+            val linesMirror: Int = findMirrorSmudge(lines)
+            val columnsMirror: Int = findMirrorSmudge(columns)
+
+            sum += (linesMirror * 100 + columnsMirror)
+        }
+
+        println(sum)
+
     }
 }

@@ -138,6 +138,7 @@ class Day18 : IDay {
 
 //        println(points)
 //        println(perimeter)
+        //pick & shoelace theorems
         val area = abs(computeArea(points))
         val insidePoints: Long = area - perimeter / 2 + 1
 
