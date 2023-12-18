@@ -65,7 +65,7 @@ class Day13 : IDay {
 
             val levenshtein = first
                 .zip(second)
-                .sumOf { (a, b) -> a.zip(b).count { (c, d) -> c != d } }
+                .sumOf { (a, b) -> a.zip(b).count  { (c, d) -> c != d } }
 
             if(levenshtein == 1){
                 return split
