@@ -17,7 +17,7 @@ data class Cell(
     var row: Int,
     var column: Int,
     val cost: Int,
-    var inlineCounter: Int,
+    var contiguousCounter: Int,
     var facePointingInDirection: Direction
 )
 
@@ -68,7 +68,7 @@ class Day17 : IDay {
         while (pq.isNotEmpty()) {
             val cell: Cell = pq.poll()
 
-            if (cell.row == grid.size - 1 && cell.column == grid[0].size - 1 && cell.inlineCounter >= 4) {
+            if (cell.row == grid.size - 1 && cell.column == grid[0].size - 1 && cell.contiguousCounter >= 4) {
                 distance = min(distance, cell.cost)
                 break
             }
@@ -76,7 +76,7 @@ class Day17 : IDay {
             val key = Triple(
                 Pair(cell.row, cell.column),
                 cell.facePointingInDirection,
-                cell.inlineCounter
+                cell.contiguousCounter
             )
 
             if (seen.containsKey(key)) {
@@ -90,14 +90,14 @@ class Day17 : IDay {
                 val newColumn: Int = cell.column + neighbour.second
 
                 if (newRow < 0 || newRow >= grid.size || newColumn < 0 || newColumn >= grid[0].size ||
-                    (cell.inlineCounter == 10 && (cell.facePointingInDirection == Direction.NORTH || cell.facePointingInDirection == Direction.SOUTH) && neighbour.first != 0) ||
-                    (cell.inlineCounter == 10 && (cell.facePointingInDirection == Direction.EAST || cell.facePointingInDirection == Direction.WEST) && neighbour.second != 0)
+                    (cell.contiguousCounter == 10 && (cell.facePointingInDirection == Direction.NORTH || cell.facePointingInDirection == Direction.SOUTH) && neighbour.first != 0) ||
+                    (cell.contiguousCounter == 10 && (cell.facePointingInDirection == Direction.EAST || cell.facePointingInDirection == Direction.WEST) && neighbour.second != 0)
                 ) {
                     continue
                 }
 
-                if (cell.inlineCounter < 4 && (cell.facePointingInDirection == Direction.NORTH || cell.facePointingInDirection == Direction.SOUTH) && neighbour.second != 0 ||
-                    cell.inlineCounter < 4 && (cell.facePointingInDirection == Direction.WEST || cell.facePointingInDirection == Direction.EAST) && neighbour.first != 0
+                if (cell.contiguousCounter < 4 && (cell.facePointingInDirection == Direction.NORTH || cell.facePointingInDirection == Direction.SOUTH) && neighbour.second != 0 ||
+                    cell.contiguousCounter < 4 && (cell.facePointingInDirection == Direction.WEST || cell.facePointingInDirection == Direction.EAST) && neighbour.first != 0
                 ) {
                     continue
                 }
@@ -105,7 +105,7 @@ class Day17 : IDay {
                 val inlineCounter = if (cell.facePointingInDirection != nextDirectionFromNeighbour[neighbour]!!) {
                     1
                 } else {
-                    cell.inlineCounter + 1
+                    cell.contiguousCounter + 1
                 }
 
                 val newCell: Cell = Cell(
@@ -157,7 +157,7 @@ class Day17 : IDay {
             val key = Triple(
                 Pair(cell.row, cell.column),
                 cell.facePointingInDirection,
-                cell.inlineCounter
+                cell.contiguousCounter
             )
 
             if (seen.containsKey(key)) {
@@ -171,8 +171,8 @@ class Day17 : IDay {
                 val newColumn: Int = cell.column + neighbour.second
 
                 if (newRow < 0 || newRow >= grid.size || newColumn < 0 || newColumn >= grid[0].size ||
-                    (cell.inlineCounter == 3 && (cell.facePointingInDirection == Direction.NORTH || cell.facePointingInDirection == Direction.SOUTH) && neighbour.first != 0) ||
-                    (cell.inlineCounter == 3 && (cell.facePointingInDirection == Direction.EAST || cell.facePointingInDirection == Direction.WEST) && neighbour.second != 0)
+                    (cell.contiguousCounter == 3 && (cell.facePointingInDirection == Direction.NORTH || cell.facePointingInDirection == Direction.SOUTH) && neighbour.first != 0) ||
+                    (cell.contiguousCounter == 3 && (cell.facePointingInDirection == Direction.EAST || cell.facePointingInDirection == Direction.WEST) && neighbour.second != 0)
                 ) {
 
                     continue
@@ -182,7 +182,7 @@ class Day17 : IDay {
                 val inlineCounter = if (cell.facePointingInDirection != nextDirectionFromNeighbour[neighbour]!!) {
                     1
                 } else {
-                    cell.inlineCounter + 1
+                    cell.contiguousCounter + 1
                 }
 
                 val newCell: Cell = Cell(
