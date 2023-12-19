@@ -26,8 +26,8 @@ data class Workflow(val conditions: List<Condition>, val finalState: String) {
         return result
     }
 
-    fun nextWorkFlowRange(): String {
-
+    fun nextWorkflowRange(): String {
+        return ""
     }
 }
 
@@ -113,6 +113,54 @@ class Day19 : IDay {
         println(sum)
     }
 
+    private fun count(
+        ranges: HashMap<String, IntRange>,
+        workflows: HashMap<String, Workflow>,
+        nextState: String
+    ): Long {
+        var total: Long = 0
+        if (nextState == "A") {
+            return ranges.keys.fold(1L) { acc, key -> acc * (ranges[key]!!.last - ranges[key]!!.first + 1) }
+        }
+
+        if (nextState == "R") {
+            return 0L
+        }
+        val fallback: String = workflows[nextState]!!.finalState
+
+        run breaking@{
+            workflows[nextState]!!.conditions.forEach { condition ->
+                val range: IntRange = ranges[condition.letter.toString()]!!
+                val letter: Char = condition.letter
+                var nextRange: IntRange = 0..0
+                var falseRange: IntRange = 0..0
+                if (condition.condition == ::smallerThan) {
+                    nextRange = range.first..condition.value - 1
+                    falseRange = condition.value..range.last
+                } else {
+                    nextRange = condition.value + 1..range.last
+                    falseRange = range.first..condition.value
+                }
+
+                if (nextRange.first <= nextRange.last) {
+                    val nextRanges = HashMap(ranges)
+                    nextRanges[letter.toString()] = nextRange
+                    total += count(nextRanges, workflows, condition.nextState)
+                }
+                if (falseRange.first <= falseRange.last) {
+                    ranges[letter.toString()] = falseRange
+                } else {
+                    return@breaking
+                }
+
+            }
+
+            total += count(ranges, workflows, fallback)
+        }
+
+        return total
+    }
+
     override fun solve2() {
         val lines = File("src/main/kotlin/day19/1.txt").readLines()
         val inputParts = lines
@@ -156,24 +204,13 @@ class Day19 : IDay {
                 key to stateWorkflow
             }
 
+        val ranges: HashMap<String, IntRange> = HashMap()
+        ranges.put("x", 1..4000)
+        ranges.put("m", 1..4000)
+        ranges.put("a", 1..4000)
+        ranges.put("s", 1..4000)
 
-        inputParts[1]
-            .split("\n")
-            .map { it.substring(1, it.length - 1) }
-            .forEach { query ->
+        println(count(ranges, workflow, "in"))
 
-
-                var state: String = initialState.nextWorkflow(x, m, a, s)
-                print(state + " -> ")
-                while (state !in finalStates) {
-                    state = workflow[state]!!.nextWorkflow(x, m, a, s)
-                    print(state + " -> ")
-                }
-                println()
-                if (state == "A") {
-                    sum += 1L * (x + m + a + s)
-                }
-
-            }
     }
 }
