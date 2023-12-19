@@ -79,7 +79,6 @@ class Day13 : IDay {
         val matrices: List<String> = templates.split("\n\n")
         var sum: Long = 0L
 
-
         matrices.forEach { matrix ->
             val lines: List<String> = matrix.split("\n")
             val columns: List<String> =
