@@ -67,7 +67,7 @@ class Day25 : IDay {
         return this.parent[target]!! != ""
     }
 
-    private fun foldFulkersonMinCut(source: String, target: String, graph: HashMap<String, HashSet<Edge>>): Int {
+    private fun fordFulkersonMinCut(source: String, target: String, graph: HashMap<String, HashSet<Edge>>): Int {
         graph.entries.forEach {
             it.value.forEach {
                 it.capacity = 1
