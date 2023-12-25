@@ -106,7 +106,7 @@ class Day25 : IDay {
         val start = graph.keys.first()
 
         for (target in graph.keys) {
-            if (start != target && foldFulkersonMinCut(start, target, graph) == 3) {
+            if (start != target && fordFulkersonMinCut(start, target, graph) == 3) {
                 break
             }
         }
