@@ -12,6 +12,7 @@ import day19.Day19
 import day2.Day2
 import day20.Day20
 import day21.Day21
+import day25.Day25
 import day3.Day3
 import day4.Day4
 import day5.Day5
@@ -41,6 +42,7 @@ fun main(args: Array<String>) {
     //Day18()
     //Day19()
     //Day20()
-    Day21()
+    //Day21()
+    Day25()
 }
 
